@@ -1,0 +1,70 @@
+/*------------------*/
+/* CSS BOILERPLATE  */
+/*------------------*/
+/* RESET BOX MODEL */
+* {
+    box-sizing: border-box;
+  }
+  
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+  
+  /* ELIMINATE BORDERS */
+  * {
+    border: none;
+  }
+  
+  /* REMOVES OUTLINE FOR MOUSE USERS, KEEPS OUTLINE FOR KEYBOARD USERS */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+  
+  html {
+    font-size: 88%; /* 14PX DEFAULT FONT-SIZE */
+    -webkit-text-size-adjust: none; /* FOR IOS SAFARI */
+    text-size-adjust: none; /* FOR OTHER MOBILE BROWSERS */
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+  
+  a {
+    text-underline-position: under; /* UNDERLINES ARE UNDER THE DESCENDERS */
+    text-decoration-thickness: 8; /* TEXT THICKNESS IS % OF FONT-SIZE */
+  }
+  
+  /* OH IMAGES, BEHAVE! */
+  img {
+    display: block;
+    max-width: 100%;
+  }
+  
+  /* RESET LIST STYLES */
+  menu:not(article menu),
+  ol:not(article ol),
+  ul:not(article ul) {
+    list-style: none;
+  }
+  
+  /* INTERACTION ELEMENTS = POINTER */
+  label,
+  button,
+  select,
+  summary,
+  [type="radio"],
+  [type="submit"],
+  [type="checkbox"] {
+    cursor: pointer;
+  }
+  /* END CSS BOILERPLATE  */
+
+  body {
+    background-image: linear-gradient(to top, coral, orange);
+    height: 100vh;
+    width: 100vw;
+  }
