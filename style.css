@@ -1,70 +1,198 @@
+@import url("https://fonts.googleapis.com/css2?family=Bungee&display=swap");
+
 /*------------------*/
 /* CSS BOILERPLATE  */
 /*------------------*/
 /* RESET BOX MODEL */
 * {
-    box-sizing: border-box;
-  }
-  
-  *,
-  *::before,
-  *::after {
-    box-sizing: border-box;
-  }
-  
-  /* ELIMINATE BORDERS */
-  * {
-    border: none;
-  }
-  
-  /* REMOVES OUTLINE FOR MOUSE USERS, KEEPS OUTLINE FOR KEYBOARD USERS */
-  :focus:not(:focus-visible) {
-    outline: none;
-  }
-  
-  html {
-    font-size: 88%; /* 14PX DEFAULT FONT-SIZE */
-    -webkit-text-size-adjust: none; /* FOR IOS SAFARI */
-    text-size-adjust: none; /* FOR OTHER MOBILE BROWSERS */
-  }
-  @media (prefers-reduced-motion: no-preference) {
-    html {
-      scroll-behavior: smooth;
-    }
-  }
-  
-  a {
-    text-underline-position: under; /* UNDERLINES ARE UNDER THE DESCENDERS */
-    text-decoration-thickness: 8; /* TEXT THICKNESS IS % OF FONT-SIZE */
-  }
-  
-  /* OH IMAGES, BEHAVE! */
-  img {
-    display: block;
-    max-width: 100%;
-  }
-  
-  /* RESET LIST STYLES */
-  menu:not(article menu),
-  ol:not(article ol),
-  ul:not(article ul) {
-    list-style: none;
-  }
-  
-  /* INTERACTION ELEMENTS = POINTER */
-  label,
-  button,
-  select,
-  summary,
-  [type="radio"],
-  [type="submit"],
-  [type="checkbox"] {
-    cursor: pointer;
-  }
-  /* END CSS BOILERPLATE  */
+  box-sizing: border-box;
+}
 
-  body {
-    background-image: linear-gradient(to top, coral, orange);
-    height: 100vh;
-    width: 100vw;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* ELIMINATE BORDERS */
+* {
+  border: none;
+}
+
+/* REMOVES OUTLINE FOR MOUSE USERS, KEEPS OUTLINE FOR KEYBOARD USERS */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+html {
+  font-size: 88%; /* 14PX DEFAULT FONT-SIZE */
+  -webkit-text-size-adjust: none; /* FOR IOS SAFARI */
+  text-size-adjust: none; /* FOR OTHER MOBILE BROWSERS */
+}
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
   }
+}
+
+a {
+  text-underline-position: under; /* UNDERLINES ARE UNDER THE DESCENDERS */
+  text-decoration-thickness: 8; /* TEXT THICKNESS IS % OF FONT-SIZE */
+}
+
+/* OH IMAGES, BEHAVE! */
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/* RESET LIST STYLES */
+menu:not(article menu),
+ol:not(article ol),
+ul:not(article ul) {
+  list-style: none;
+}
+
+/* INTERACTION ELEMENTS = POINTER */
+label,
+button,
+select,
+summary,
+[type="radio"],
+[type="submit"],
+[type="checkbox"] {
+  cursor: pointer;
+}
+/* END CSS BOILERPLATE  */
+body {
+  margin: 0 auto;
+  padding: 0;
+}
+
+#container {
+  background: linear-gradient(#ffa500, #ff7f50);
+  font: 3em "Bungee", cursive;
+  height: 100vh;
+  width: 100vw;
+}
+
+#calculator {
+  background-color: #ccc;
+  border: 2px solid #999;
+  border-radius: 9px;
+  box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.25);
+  height: 480px;
+  margin: 0 auto;
+  position: relative;
+  top: 25vh;
+  padding: 10px;
+  -ms-transform: rotate(1deg); /* IE 9 */
+  transform: rotate(1deg);
+  width: 480px;
+}
+
+.parent {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: 1.5fr repeat(4, 1fr);
+  grid-gap: 8px;
+  grid-template-areas:
+    "result result result result result"
+    "seven eight nine squ_root clear"
+    "four five six percent divide"
+    "one two three addition multiply"
+    "zero decimal equal addition minus";
+}
+
+.button {
+  align-items: center;
+  background-color: #909090;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-shadow: 2px 2px 1px rgba(0, 0, 0, 0.25);
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  text-shadow: 1px 2px 2px #666;
+  transform: translate(0, 0);
+}
+
+.seven {
+  grid-area: seven;
+}
+
+.addition {
+  grid-area: addition;
+}
+
+.result {
+  grid-area: result;
+}
+
+.eight {
+  grid-area: eight;
+}
+
+.nine {
+  grid-area: nine;
+}
+
+.squ_root {
+  grid-area: squ_root;
+}
+
+.clear {
+  grid-area: clear;
+}
+
+.four {
+  grid-area: four;
+}
+
+.five {
+  grid-area: five;
+}
+
+.six {
+  grid-area: six;
+}
+
+.percent {
+  grid-area: percent;
+}
+
+.divide {
+  grid-area: divide;
+}
+
+.multiply {
+  grid-area: multiply;
+}
+
+.minus {
+  grid-area: minus;
+}
+
+.equal {
+  grid-area: equal;
+}
+
+.decimal {
+  grid-area: decimal;
+}
+
+.zero {
+  grid-area: zero;
+}
+
+.one {
+  grid-area: one;
+}
+
+.two {
+  grid-area: two;
+}
+
+.three {
+  grid-area: three;
+}
