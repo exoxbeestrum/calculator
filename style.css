@@ -90,7 +90,21 @@ body {
   transform: rotate(1deg);
   width: 480px;
 }
+#display-frame {
+  background-color: lightblue;
+  border: 1px solid #999;
+  overflow: hidden;
+}
 
+#display {
+  font-size: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/*---------------*/
+/* GRID LAYOUT   */
+/*---------------*/
 .parent {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -196,3 +210,4 @@ body {
 .three {
   grid-area: three;
 }
+/* END GRID LAYOUT --*/
