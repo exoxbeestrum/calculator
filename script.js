@@ -13,9 +13,8 @@
 /* KEY EVENTS   */
 /*--------------*/
 const calculator = () => {
-  const frame = document.getElementById("display-frame").offsetWidth - 30; //426px
-  const display = document.getElementById("display");
-  const numbers = {
+  const button = {
+    //INPUT BUTTONS
     zero: 0,
     one: 1,
     two: 2,
@@ -26,7 +25,19 @@ const calculator = () => {
     seven: 7,
     eight: 8,
     nine: 9,
+    addition: "&plus;",
+    clear: "clear",
+    decimal: ".",
+    divide: "&divide;",
+    equal: "&equals;",
+    minus: "&minus;",
+    multiply: "&times;",
+    percent: "&percnt;",
+    squroot: "&radic;",
   };
+  const equals = document.getElementById("equal");
+  const frame = document.getElementById("display-frame").offsetWidth - 30; //426px
+  const display = document.getElementById("display");
 
   let input = "";
   let keys = document.getElementsByClassName("button");
@@ -77,15 +88,19 @@ const calculator = () => {
     display.innerHTML = input;
   });
 
+  //OPERATOR EVENTS
+  equals.addEventListener("mouseup", function (event) {
+    console.log("equals");
+  });
+
   /*---------------------*/
   /* INTERIOR FUNCTIONS  */
   /*---------------------*/
   //CONVERT BUTTON CLICK TO INPUT
   let inputDisplay = (elemId) => {
-    console.log(numbers[elemId]);
-    input = input += numbers[elemId];
+    //console.log(button[elemId]);
+    input = input += button[elemId];
     display.innerHTML = input;
-
   };
 
   //RESIZE FONT TO FIT DISPLAY
