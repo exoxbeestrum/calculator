@@ -1,18 +1,19 @@
-/* Last updated: 5/2/2023   */
+/* Last updated: 5/3/2023 --*/
 
 /* ROAD MAP
-  1. COMPARE keysArray[] AGAINST Obj.numbers{}, AND ENTER CORRECT INPUT
-  2. SWITCH(?) STATEMENT FOR NON-NUMBER KEYS (OPERATORS, DECIMALS, CLEAR)
-  3. HIGHLIGHT OPERATOR KEY ON PRESS/RELEASE
-  4. SHOW RESULT, RELEASE OPERATOR HIGHLIGHT ON EQUAL (IF VALID)
-  5. TEST TEST TEST
-  6. STYLE CALCULATOR
+  1. REVIEW LINE #164
+  2. HIGHLIGHT OPERATOR KEY ON PRESS/RELEASE
+  3. SHOW RESULT, RELEASE OPERATOR HIGHLIGHT ON EQUAL (IF VALID)
+  4. TEST TEST TEST
+  5. STYLE CALCULATOR
 */
 
-/*--------------*/
-/* KEY EVENTS   */
-/*--------------*/
+/*---------------------*/
+/* DECLARE VARIABLES   */
+/*---------------------*/
+// CALCULATOR FUNCTION
 const calculator = () => {
+  //SET VARIABLES
   const button = {
     //INPUT BUTTONS
     zero: 0,
@@ -25,59 +26,97 @@ const calculator = () => {
     seven: 7,
     eight: 8,
     nine: 9,
-    addition: "&plus;",
-    clear: "clear",
+    addition: "+",
+    clear: "C",
     decimal: ".",
-    divide: "&divide;",
-    equal: "&equals;",
-    minus: "&minus;",
-    multiply: "&times;",
-    percent: "&percnt;",
-    squroot: "&radic;",
+    divide: "/",
+    equal: "=",
+    minus: "-",
+    multiply: "*",
+    percent: "%",
+    squroot: "√",
   };
+
+  const operator = {
+    "+": function (a, b) {
+      return a + b;
+    },
+    C: function (a, b) {
+      a == "";
+      b == "";
+      return a, b;
+    },
+    "/": function (a, b) {
+      return a / b;
+    },
+    "-": function (a, b) {
+      return a - b;
+    },
+    "*": function (a, b) {
+      return a * b;
+    },
+    "%": function (a, b) {
+      return (a / b) * 100;
+    },
+    "√": function (a) {
+      let num = a;
+      num = Math.sqrt(num);
+      if (Number.isInteger(num) == true) {
+        return num;
+      }
+      if (Number.isInteger(num) == false) {
+        return num.toFixed(2);
+      }
+    },
+  };
+
   const equals = document.getElementById("equal");
   const frame = document.getElementById("display-frame").offsetWidth - 30; //426px
   const display = document.getElementById("display");
 
+  let a; //HOLD FOR FIRST NUMBER EXPRESSION
+  let b; //HOLD FOR SECOND NUMBER EXPRESSION
   let input = "";
   let keys = document.getElementsByClassName("button");
   let keysArray = new Array();
-  let temp;
-  let x;
+  /* END DECLARE VARIABLES --*/
 
   //SET CALCULATOR DISPLAY
   display.style.fontSize = "92px";
   display.innerHTML = "";
 
   //GATHER BUTTONS BY CLASS NAME
-  for (x = 0; x < keys.length; x++) {
-    //STRIP .button FROM CLASS NAME;INSERT KEY IDENTIFIER INTO ARRAY
+  for (let x = 0; x < keys.length; x++) {
+    //STRIP .button FROM CLASS NAME; INSERT KEY IDENTIFIER INTO ARRAY
     keysArray.push(keys[x].className.replace("button ", ""));
   }
 
-  //  numsLength = Object.keys(numbers).length;
-  //  console.log(numsLength);
-
-  /*
-  for (const value in numbers) {
-    if (numbers.hasOwnProperty(value)) {
-      console.log(`${value}: ${numbers[value]}`);
-    }
-  }
-  */
-
-  //MOUSE EVENTS
-  document.addEventListener("click", function (event) {
+  /*----------------*/
+  /* MOUSE EVENTS   */
+  /*----------------*/
+  document.addEventListener("mouseup", function (event) {
     let elemId = event.target.id; //CAPTURE BUTTON ID
+    //IF = BUTTON IS PUSHED
+    if (elemId == "equal") {
+      doTheMath(operator, a, b);
+    }
     inputDisplay(elemId);
     resizeDisplay();
   });
+  /* END MOUSE EVENTS  */
 
-  // KEYBOARD EVENTS
+  /*-------------------*/
+  /* KEYBOARD EVENTS   */
+  /*-------------------*
   document.addEventListener("keydown", function (event) {
+    //IF NOT THE SPACEBAR (B/C SPACEBAR RETURNS "0")
+    if (event.key == " " || event.code == "Space" || event.keyCode == 32) {
+      console.log("SPACE " + event.key);
+    }
     temp = event.key;
     temp = +temp;
 
+    //IF NOT A NUMBER
     if (isNaN(temp) == false) {
       input = input += temp;
     }
@@ -86,21 +125,56 @@ const calculator = () => {
       resizeDisplay();
     });
     display.innerHTML = input;
+    console.log(input);
   });
+  /* END KEYBOARD EVENTS --*/
 
-  //OPERATOR EVENTS
-  equals.addEventListener("mouseup", function (event) {
-    console.log("equals");
-  });
-
-  /*---------------------*/
-  /* INTERIOR FUNCTIONS  */
-  /*---------------------*/
+  /*----------------------*/
+  /* INTERIOR FUNCTIONS   */
+  /*----------------------*/
   //CONVERT BUTTON CLICK TO INPUT
   let inputDisplay = (elemId) => {
-    //console.log(button[elemId]);
-    input = input += button[elemId];
-    display.innerHTML = input;
+    //IF PROPERTY EXISTS IN obj.buttons
+    if (button[elemId] !== undefined) {
+      //IF A NUMBER WAS PRESSED (0-9)
+      if (numRange(button[elemId], 0, 9) === true) {
+        input = input += button[elemId];
+        display.innerHTML = input;
+      }
+      //IF AN OPERATOR WAS PRESSED
+      else {
+        operatorCheck(elemId);
+      }
+    }
+  };
+
+  //NUMBER CHECK
+  let numRange = (x, min, max) => {
+    return (x - min) * (x - max) <= 0;
+  };
+
+  //OPERATOR CHECK
+  let operatorCheck = (elemId) => {
+    //ITERATE OVER OBJECT, LOCATE CALLED OPERATOR
+    for (const property in button) {
+      if (property == elemId) {
+        //console.log("OPERATOR: " + elemId);
+        //console.log(input);
+        //console.log(button[elemId]);
+
+        a = input; //REASSIGN FIRST INPUT
+        input = ""; //CLEAR INPUT
+        //1. SCRIPT: CLEAR, PERCENTAGE, SQUARE-ROOT, EQUAL
+        //2. HIGHLIGHT OPERATOR ON SELECTION
+        //3. DISABLE OTHER BUTTONS(?)
+        //4. WRITE FUNCTION FOR EQUAL, PERCENTAGE, SQUARE-ROOT MOUSEDOWN
+      }
+    }
+  };
+
+  //SOLVE MATH PROBLEM
+  let doTheMath = (operator, numbers, moreNumbers) => {
+    console.log("LET A = " + a);
   };
 
   //RESIZE FONT TO FIT DISPLAY
@@ -109,13 +183,25 @@ const calculator = () => {
       let fontSize = parseInt(display.style.fontSize); //DELETE 'px'
       let ratioW = (frame / display.offsetWidth).toFixed(2);
       let ratioH = Math.round(fontSize * ratioW);
-
+      //SET DISPLAY
       display.style.fontSize = ratioH + "px";
     }
   };
   /* END INTERIOR FUNCTIONS --*/
 };
 
+/*---------------------------*/
+/* RELEASE THE CALCULATOR!   */
+/*---------------------------*/
 window.onload = () => {
   calculator();
 };
+
+/*-----------------*/
+/* LEFTOVER CODE   */
+/*-----------------*
+    //ITERATE OVER obj.button, DISPLAY PROPERTIES
+    for (const property in button) {
+      console.log(`${property}: ${button[property]}`);
+    }
+/* END LEFTOVER CODE --*/
