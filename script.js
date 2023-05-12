@@ -1,4 +1,4 @@
-/* Last updated: 5/3/2023 --*/
+/* Last updated: 5/12/2023 --*/
 
 /* ROAD MAP
   1. REVIEW LINE #164
@@ -98,7 +98,8 @@ const calculator = () => {
     let elemId = event.target.id; //CAPTURE BUTTON ID
     //IF = BUTTON IS PUSHED
     if (elemId == "equal") {
-      doTheMath(operator, a, b);
+      b = input;
+      doTheMath(mathOperator, a, b);
     }
     inputDisplay(elemId);
     resizeDisplay();
@@ -158,12 +159,31 @@ const calculator = () => {
     //ITERATE OVER OBJECT, LOCATE CALLED OPERATOR
     for (const property in button) {
       if (property == elemId) {
-        //console.log("OPERATOR: " + elemId);
-        //console.log(input);
-        //console.log(button[elemId]);
+        /*
+    clear: "C",
+    decimal: ".",
+    divide: "/",
+    equal: "=",
+    minus: "-",
+    multiply: "*",
+    percent: "%",
+    squroot: "√",
+    */
 
-        a = input; //REASSIGN FIRST INPUT
-        input = ""; //CLEAR INPUT
+        if (button[elemId] == "C") {
+          console.log("CLEAR");
+        } else if (button[elemId] == ".") {
+          console.log("DECIMAL");
+        } else if (button[elemId] == "%") {
+          console.log("PERCENTAGE");
+        } else if (button[elemId] == "√") {
+          console.log("SQUARE ROOT");
+        } else {
+          mathOperator = button[elemId];
+          a = input; //REASSIGN FIRST INPUT
+          input = ""; //CLEAR INPUT
+        }
+        console.log(button[elemId]);
         //1. SCRIPT: CLEAR, PERCENTAGE, SQUARE-ROOT, EQUAL
         //2. HIGHLIGHT OPERATOR ON SELECTION
         //3. DISABLE OTHER BUTTONS(?)
@@ -174,7 +194,8 @@ const calculator = () => {
 
   //SOLVE MATH PROBLEM
   let doTheMath = (operator, numbers, moreNumbers) => {
-    console.log("LET A = " + a);
+    let str = a + mathOperator + b; // CONCATENATE THE STRING
+    display.innerHTML = new Function("return " + str)(); //DISPLAY THE RESULT
   };
 
   //RESIZE FONT TO FIT DISPLAY
