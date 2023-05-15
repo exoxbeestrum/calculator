@@ -90,9 +90,21 @@ body {
   transform: rotate(1deg);
   width: 480px;
 }
+
+#calculator > div {
+  -moz-transition: all 0.15s ease-in;
+  -o-transition: all 0.15s ease-in;
+  -webkit-transition: all 0.15s ease-in;
+  transition: all 0.15s ease-in;
+}
+#calculator > div:hover {
+  background: #00fa92;
+  color: #008f00;
+}
+
 #display-frame {
   background-color: lightblue;
-  border: 1px solid #999;
+  border: 1px solid #4682b4;
   overflow: hidden;
 }
 
