@@ -1,4 +1,4 @@
-/* Last updated: 5/12/2023 --*/
+/* Last updated: 5/15/2023 --*/
 
 /* ROAD MAP
   1. REVIEW LINE #164
@@ -37,6 +37,7 @@ const calculator = () => {
     squroot: "√",
   };
 
+  /*
   const operator = {
     "+": function (a, b) {
       return a + b;
@@ -69,6 +70,7 @@ const calculator = () => {
       }
     },
   };
+  */
 
   const equals = document.getElementById("equal");
   const frame = document.getElementById("display-frame").offsetWidth - 30; //426px
@@ -76,13 +78,17 @@ const calculator = () => {
 
   let a; //HOLD FOR FIRST NUMBER EXPRESSION
   let b; //HOLD FOR SECOND NUMBER EXPRESSION
+  let defaultFontSz = "92px";
   let input = "";
   let keys = document.getElementsByClassName("button");
   let keysArray = new Array();
+  let result = undefined; //HOLD FOR MATH RESULT. DUH.
+  let str; //HOLD FOR MATH EXPRESSION
+  let temp;
   /* END DECLARE VARIABLES --*/
 
   //SET CALCULATOR DISPLAY
-  display.style.fontSize = "92px";
+  display.style.fontSize = defaultFontSz;
   display.innerHTML = "";
 
   //GATHER BUTTONS BY CLASS NAME
@@ -96,6 +102,16 @@ const calculator = () => {
   /*----------------*/
   document.addEventListener("mouseup", function (event) {
     let elemId = event.target.id; //CAPTURE BUTTON ID
+    //ASSIGN TEMP VALUE FOR % FUNCTION
+    if (temp == undefined) {
+      temp = a;
+    }
+    if (elemId == "squroot") {
+    }
+    //IF % BUTTON IS SELECTED
+    if (elemId == "percent") {
+      calcPercentage(temp, b);
+    }
     //IF = BUTTON IS PUSHED
     if (elemId == "equal") {
       b = input;
@@ -159,31 +175,26 @@ const calculator = () => {
     //ITERATE OVER OBJECT, LOCATE CALLED OPERATOR
     for (const property in button) {
       if (property == elemId) {
-        /*
-    clear: "C",
-    decimal: ".",
-    divide: "/",
-    equal: "=",
-    minus: "-",
-    multiply: "*",
-    percent: "%",
-    squroot: "√",
-    */
-
+        //CLEAR
         if (button[elemId] == "C") {
-          console.log("CLEAR");
-        } else if (button[elemId] == ".") {
-          console.log("DECIMAL");
-        } else if (button[elemId] == "%") {
-          console.log("PERCENTAGE");
-        } else if (button[elemId] == "√") {
-          console.log("SQUARE ROOT");
+          //location.reload();
+          calculator();
+          return;
+        }
+        //DECIMAL
+        else if (button[elemId] == ".") {
+          input = input += ".";
+          buttonState(elemId);
         } else {
           mathOperator = button[elemId];
-          a = input; //REASSIGN FIRST INPUT
-          input = ""; //CLEAR INPUT
+          if (result !== undefined) {
+            a = result;
+            input = "";
+          } else {
+            a = input; //REASSIGN FIRST INPUT
+            input = ""; //CLEAR INPUT
+          }
         }
-        console.log(button[elemId]);
         //1. SCRIPT: CLEAR, PERCENTAGE, SQUARE-ROOT, EQUAL
         //2. HIGHLIGHT OPERATOR ON SELECTION
         //3. DISABLE OTHER BUTTONS(?)
@@ -192,10 +203,36 @@ const calculator = () => {
     }
   };
 
+  //BUTTON INDICATOR
+  let buttonState = (elem, state) => {
+    console.log("BUTTONSTTE: " + elem);
+  };
+
+  //CALCULATE PERCENTAGE
+  let calcPercentage = (a, b) => {
+    str = (a / b) * 100;
+    result = new Function("return " + str)();
+    result = result.toFixed(2) + "%";
+    a = b = temp = "";
+    display.innerHTML = result;
+  };
+
   //SOLVE MATH PROBLEM
   let doTheMath = (operator, numbers, moreNumbers) => {
-    let str = a + mathOperator + b; // CONCATENATE THE STRING
-    display.innerHTML = new Function("return " + str)(); //DISPLAY THE RESULT
+    //SQUARE ROOT
+    if (mathOperator == "√") {
+      console.log("SQUARE ROOT: " + mathOperator);
+    }
+    //EQUALS
+    else {
+      str = a + mathOperator + b; //CONCATENATE THE STRING
+      result = new Function("return " + str)();
+
+//   console.log(str);
+  //          let maths = `result=${str}`
+    //      Function(maths)();
+    }
+    display.innerHTML = result; //DISPLAY THE RESULT
   };
 
   //RESIZE FONT TO FIT DISPLAY
@@ -206,6 +243,8 @@ const calculator = () => {
       let ratioH = Math.round(fontSize * ratioW);
       //SET DISPLAY
       display.style.fontSize = ratioH + "px";
+    } else {
+      display.style.fontSize = defaultFontSz;
     }
   };
   /* END INTERIOR FUNCTIONS --*/
