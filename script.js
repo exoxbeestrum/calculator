@@ -1,7 +1,7 @@
-/* Last updated: 5/15/2023 --*/
+/* Last updated: 5/23/2023 --*/
 
 /* ROAD MAP
-  1. REVIEW LINE #164
+  1. ADD LISTENER EVENT FOR OPERATORS(?)
   2. HIGHLIGHT OPERATOR KEY ON PRESS/RELEASE
   3. SHOW RESULT, RELEASE OPERATOR HIGHLIGHT ON EQUAL (IF VALID)
   4. TEST TEST TEST
@@ -37,41 +37,6 @@ const calculator = () => {
     squroot: "√",
   };
 
-  /*
-  const operator = {
-    "+": function (a, b) {
-      return a + b;
-    },
-    C: function (a, b) {
-      a == "";
-      b == "";
-      return a, b;
-    },
-    "/": function (a, b) {
-      return a / b;
-    },
-    "-": function (a, b) {
-      return a - b;
-    },
-    "*": function (a, b) {
-      return a * b;
-    },
-    "%": function (a, b) {
-      return (a / b) * 100;
-    },
-    "√": function (a) {
-      let num = a;
-      num = Math.sqrt(num);
-      if (Number.isInteger(num) == true) {
-        return num;
-      }
-      if (Number.isInteger(num) == false) {
-        return num.toFixed(2);
-      }
-    },
-  };
-  */
-
   const equals = document.getElementById("equal");
   const frame = document.getElementById("display-frame").offsetWidth - 30; //426px
   const display = document.getElementById("display");
@@ -79,6 +44,7 @@ const calculator = () => {
   let a; //HOLD FOR FIRST NUMBER EXPRESSION
   let b; //HOLD FOR SECOND NUMBER EXPRESSION
   let defaultFontSz = "92px";
+  let defaultHTML = "&#128522;";
   let input = "";
   let keys = document.getElementsByClassName("button");
   let keysArray = new Array();
@@ -89,7 +55,7 @@ const calculator = () => {
 
   //SET CALCULATOR DISPLAY
   display.style.fontSize = defaultFontSz;
-  display.innerHTML = "";
+  display.innerHTML = defaultHTML;
 
   //GATHER BUTTONS BY CLASS NAME
   for (let x = 0; x < keys.length; x++) {
@@ -177,14 +143,19 @@ const calculator = () => {
       if (property == elemId) {
         //CLEAR
         if (button[elemId] == "C") {
-          //location.reload();
-          calculator();
-          return;
+          a = b = input = "";
+          result = undefined;
+          display.innerHTML = defaultHTML;
         }
         //DECIMAL
         else if (button[elemId] == ".") {
           input = input += ".";
           buttonState(elemId);
+        }
+        //SQUARE ROOT
+        else if (button[elemId] == "√") {
+          mathOperator = button[elemId];
+          doTheMath(mathOperator, a, b);
         } else {
           mathOperator = button[elemId];
           if (result !== undefined) {
@@ -195,10 +166,6 @@ const calculator = () => {
             input = ""; //CLEAR INPUT
           }
         }
-        //1. SCRIPT: CLEAR, PERCENTAGE, SQUARE-ROOT, EQUAL
-        //2. HIGHLIGHT OPERATOR ON SELECTION
-        //3. DISABLE OTHER BUTTONS(?)
-        //4. WRITE FUNCTION FOR EQUAL, PERCENTAGE, SQUARE-ROOT MOUSEDOWN
       }
     }
   };
@@ -217,20 +184,50 @@ const calculator = () => {
     display.innerHTML = result;
   };
 
+  /*
+  //REDUCE SQUARE ROOT RESULT
+  let smallSqRoot = (result) => {
+    console.log("SMALL ROOT");
+    length = result.toString().length;
+console.log(length);
+    if (length >= 6) {
+      console.log(typeof(result));
+      console.log(result.toFixed(5));
+      result = result.toFixed(5);
+      return;
+    }
+  };
+  */
+
   //SOLVE MATH PROBLEM
   let doTheMath = (operator, numbers, moreNumbers) => {
     //SQUARE ROOT
     if (mathOperator == "√") {
-      console.log("SQUARE ROOT: " + mathOperator);
+      if (result) {
+        result = Math.sqrt(result);
+      } else if (a || input) {
+        if (a) {
+          result = Math.sqrt(a).toFixed(5);
+        } else {
+          result = Math.sqrt(input);
+        }
+      } else {
+        result = "error";
+        return;
+      }
+
+      //REDUCE THE RESULT
+      let n = result.toString().length;
+      if (n >= 6) {
+        result = result.toFixed(5);
+      }
+      a = b = input = "";
     }
     //EQUALS
     else {
       str = a + mathOperator + b; //CONCATENATE THE STRING
+      console.log("231: str = " + str);
       result = new Function("return " + str)();
-
-//   console.log(str);
-  //          let maths = `result=${str}`
-    //      Function(maths)();
     }
     display.innerHTML = result; //DISPLAY THE RESULT
   };
@@ -264,4 +261,40 @@ window.onload = () => {
     for (const property in button) {
       console.log(`${property}: ${button[property]}`);
     }
+
+  /*
+  const operator = {
+    "+": function (a, b) {
+      return a + b;
+    },
+    C: function (a, b) {
+      a == "";
+      b == "";
+      return a, b;
+    },
+    "/": function (a, b) {
+      return a / b;
+    },
+    "-": function (a, b) {
+      return a - b;
+    },
+    "*": function (a, b) {
+      return a * b;
+    },
+    "%": function (a, b) {
+      return (a / b) * 100;
+    },
+    "√": function (a) {
+      let num = a;
+      num = Math.sqrt(num);
+      if (Number.isInteger(num) == true) {
+        return num;
+      }
+      if (Number.isInteger(num) == false) {
+        return num.toFixed(2);
+      }
+    },
+  };
+  */
+
 /* END LEFTOVER CODE --*/
