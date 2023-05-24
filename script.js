@@ -15,7 +15,7 @@
 const calculator = () => {
   //SET VARIABLES
   const button = {
-    //INPUT BUTTONS
+    //MOUSE INPUT BUTTONS
     zero: 0,
     one: 1,
     two: 2,
@@ -35,6 +35,14 @@ const calculator = () => {
     multiply: "*",
     percent: "%",
     squroot: "√",
+    //KEYBOARD INPUT
+    Enter: "Enter",
+    ".": ".",
+    "/": "/",
+    "-": "-",
+    "=": "=",
+    "*": "*",
+    "%": "%",
   };
 
   const equals = document.getElementById("equal");
@@ -51,7 +59,7 @@ const calculator = () => {
   let keysArray = new Array();
   let result = undefined; //HOLD FOR MATH RESULT. DUH.
   let str; //HOLD FOR MATH EXPRESSION
-  let temp = "";
+  let temp;
   /* END DECLARE VARIABLES --*/
 
   //SET CALCULATOR DISPLAY
@@ -72,8 +80,6 @@ const calculator = () => {
     //ASSIGN TEMP VALUE FOR % FUNCTION
     if (temp == undefined) {
       temp = a;
-    }
-    if (elemId == "squroot") {
     }
     //IF % BUTTON IS SELECTED
     if (elemId == "percent") {
@@ -103,16 +109,41 @@ const calculator = () => {
       Object.keys(button).forEach(function (key) {
         if (button[key] == event.key) {
           elemId = button[key];
-          console.log(elemId);
-
-          /* ---------------------------------------------- */
-          /* ADD ALL THE CONDITIONAL CHECKS                 */
-          /* (SQ ROOT, DECIMAL, EQUALS, ETC) IN THIS SPACE  */
-          /* -----------------------------------------------*/
-
-          inputDisplay(elemId);
         }
+        /* ---------------------------------------------- */
+        /* ADD ALL THE CONDITIONAL CHECKS                 */
+        /* (SQ ROOT, DECIMAL, EQUALS, ETC) IN THIS SPACE  */
+        /* -----------------------------------------------*/
+
+        
       });
+
+      console.log("118 ELEMID: " + elemId);
+
+      //ASSIGN TEMP VALUE FOR % FUNCTION
+      if (temp == undefined) {
+        temp = a;
+      }
+      //IF % BUTTON IS SELECTED
+      if (elemId == "%") {
+        calcPercentage(temp, b);
+      }
+      //IF = BUTTON IS PUSHED
+      if (elemId == "Enter") {
+        b = input;
+        doTheMath(mathOperator, a, b);
+      }
+      inputDisplay(elemId);
+
+      /*
+      if (a == undefined) {
+        a = input;
+        console.log("A: " + a);
+      }
+      inputDisplay(elemId);
+      operatorCheck(elemId);
+
+*/
     }
   });
 
@@ -149,7 +180,9 @@ const calculator = () => {
   let operatorCheck = (elemId) => {
     //ITERATE OVER OBJECT, LOCATE CALLED OPERATOR
     for (const property in button) {
+      console.log("182");
       if (property == elemId) {
+        console.log("184");
         //CLEAR
         if (button[elemId] == "C") {
           a = b = input = "";
@@ -165,8 +198,27 @@ const calculator = () => {
         else if (button[elemId] == "√") {
           mathOperator = button[elemId];
           doTheMath(mathOperator, a, b);
-        } else {
+        }
+        //ENTER || RETURN KEYPRESS
+        else if (button[elemId] == "Enter") {
+          if (result !== undefined) {
+            a = result;
+            input = "";
+          } else {
+            a = input; //REASSIGN FIRST INPUT
+            input = ""; //CLEAR INPUT
+
+          }
+          console.log("AAA: " + a);
+        }
+
+        //ASSIGN MATH OPERATOR
+        else {
+          console.log("INSIDE");
           mathOperator = button[elemId];
+
+          console.log(mathOperator);
+
           if (result !== undefined) {
             a = result;
             input = "";
@@ -217,6 +269,8 @@ const calculator = () => {
       }
       a = b = input = "";
     }
+    //END SQUARE ROOT
+
     //EQUALS
     else {
       str = a + mathOperator + b; //CONCATENATE THE STRING
