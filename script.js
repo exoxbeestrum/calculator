@@ -1,8 +1,8 @@
-/* Last updated: 5/23/2023 --*/
+/* Last updated: 5/24/2023 --*/
 
 /* ROAD MAP
-  1. ADD LISTENER EVENT FOR OPERATORS(?)
-  2. HIGHLIGHT OPERATOR KEY ON PRESS/RELEASE
+  1. ADD LISTENER EVENT FOR KEYBOARD OPERATORS(?)
+  2. HIGHLIGHT OPERATOR KEY ON PRESS/RELEASE (buttonState(), LINE ~174)
   3. SHOW RESULT, RELEASE OPERATOR HIGHLIGHT ON EQUAL (IF VALID)
   4. TEST TEST TEST
   5. STYLE CALCULATOR
@@ -45,12 +45,13 @@ const calculator = () => {
   let b; //HOLD FOR SECOND NUMBER EXPRESSION
   let defaultFontSz = "92px";
   let defaultHTML = "&#128522;";
+  let elemId;
   let input = "";
   let keys = document.getElementsByClassName("button");
   let keysArray = new Array();
   let result = undefined; //HOLD FOR MATH RESULT. DUH.
   let str; //HOLD FOR MATH EXPRESSION
-  let temp;
+  let temp = "";
   /* END DECLARE VARIABLES --*/
 
   //SET CALCULATOR DISPLAY
@@ -67,7 +68,7 @@ const calculator = () => {
   /* MOUSE EVENTS   */
   /*----------------*/
   document.addEventListener("mouseup", function (event) {
-    let elemId = event.target.id; //CAPTURE BUTTON ID
+    elemId = event.target.id; //CAPTURE BUTTON ID
     //ASSIGN TEMP VALUE FOR % FUNCTION
     if (temp == undefined) {
       temp = a;
@@ -90,25 +91,33 @@ const calculator = () => {
 
   /*-------------------*/
   /* KEYBOARD EVENTS   */
-  /*-------------------*
+  /*-------------------*/
   document.addEventListener("keydown", function (event) {
-    //IF NOT THE SPACEBAR (B/C SPACEBAR RETURNS "0")
-    if (event.key == " " || event.code == "Space" || event.keyCode == 32) {
-      console.log("SPACE " + event.key);
+    //IF A NUMBER IS PRESSED
+    if (isNaN(event.key) == false) {
+      input = input + event.key;
+      display.innerHTML = input;
     }
-    temp = event.key;
-    temp = +temp;
+    //IF AN OPERATOR IS PRESSED
+    else {
+      Object.keys(button).forEach(function (key) {
+        if (button[key] == event.key) {
+          elemId = button[key];
+          console.log(elemId);
 
-    //IF NOT A NUMBER
-    if (isNaN(temp) == false) {
-      input = input += temp;
+          /* ---------------------------------------------- */
+          /* ADD ALL THE CONDITIONAL CHECKS                 */
+          /* (SQ ROOT, DECIMAL, EQUALS, ETC) IN THIS SPACE  */
+          /* -----------------------------------------------*/
+
+          inputDisplay(elemId);
+        }
+      });
     }
-    document.addEventListener("keypress", function (event) {
-      //SHRINK USER INPUT TO FIT CALCULATOR
-      resizeDisplay();
-    });
-    display.innerHTML = input;
-    console.log(input);
+  });
+
+  document.addEventListener("keypress", function (event) {
+    resizeDisplay();
   });
   /* END KEYBOARD EVENTS --*/
 
@@ -183,21 +192,6 @@ const calculator = () => {
     a = b = temp = "";
     display.innerHTML = result;
   };
-
-  /*
-  //REDUCE SQUARE ROOT RESULT
-  let smallSqRoot = (result) => {
-    console.log("SMALL ROOT");
-    length = result.toString().length;
-console.log(length);
-    if (length >= 6) {
-      console.log(typeof(result));
-      console.log(result.toFixed(5));
-      result = result.toFixed(5);
-      return;
-    }
-  };
-  */
 
   //SOLVE MATH PROBLEM
   let doTheMath = (operator, numbers, moreNumbers) => {
