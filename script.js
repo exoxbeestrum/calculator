@@ -1,7 +1,7 @@
-/* Last updated: 5/24/2023 --*/
+/* Last updated: 5/25/2023 --*/
 
 /* ROAD MAP
-  1. ADD LISTENER EVENT FOR KEYBOARD OPERATORS(?)
+  1. KEYBOARD EVENTS: CLEAR, PERCENTAGE, SQUARE ROOT
   2. HIGHLIGHT OPERATOR KEY ON PRESS/RELEASE (buttonState(), LINE ~174)
   3. SHOW RESULT, RELEASE OPERATOR HIGHLIGHT ON EQUAL (IF VALID)
   4. TEST TEST TEST
@@ -15,7 +15,6 @@
 const calculator = () => {
   //SET VARIABLES
   const button = {
-    //MOUSE INPUT BUTTONS
     zero: 0,
     one: 1,
     two: 2,
@@ -35,19 +34,11 @@ const calculator = () => {
     multiply: "*",
     percent: "%",
     squroot: "√",
-    //KEYBOARD INPUT
-    Enter: "Enter",
-    ".": ".",
-    "/": "/",
-    "-": "-",
-    "=": "=",
-    "*": "*",
-    "%": "%",
   };
 
-  const equals = document.getElementById("equal");
   const frame = document.getElementById("display-frame").offsetWidth - 30; //426px
   const display = document.getElementById("display");
+  const keyOperators = ["Enter", ".", "/", "-", "=", "*", "%", "+"];
 
   let a; //HOLD FOR FIRST NUMBER EXPRESSION
   let b; //HOLD FOR SECOND NUMBER EXPRESSION
@@ -57,6 +48,7 @@ const calculator = () => {
   let input = "";
   let keys = document.getElementsByClassName("button");
   let keysArray = new Array();
+  let operator; //MATH EXPRESSION/OPERATOR
   let result = undefined; //HOLD FOR MATH RESULT. DUH.
   let str; //HOLD FOR MATH EXPRESSION
   let temp;
@@ -88,7 +80,7 @@ const calculator = () => {
     //IF = BUTTON IS PUSHED
     if (elemId == "equal") {
       b = input;
-      doTheMath(mathOperator, a, b);
+      doTheMath(operator, a, b);
     }
     inputDisplay(elemId);
     resizeDisplay();
@@ -105,45 +97,41 @@ const calculator = () => {
       display.innerHTML = input;
     }
     //IF AN OPERATOR IS PRESSED
-    else {
-      Object.keys(button).forEach(function (key) {
-        if (button[key] == event.key) {
-          elemId = button[key];
-        }
-        /* ---------------------------------------------- */
-        /* ADD ALL THE CONDITIONAL CHECKS                 */
-        /* (SQ ROOT, DECIMAL, EQUALS, ETC) IN THIS SPACE  */
-        /* -----------------------------------------------*/
-
-        
-      });
-
-      console.log("118 ELEMID: " + elemId);
-
-      //ASSIGN TEMP VALUE FOR % FUNCTION
-      if (temp == undefined) {
-        temp = a;
+    if (keyOperators.includes(event.key) == 1) {
+      switch (event.key) {
+        //DECIMAL
+        case ".":
+          //ADD ONLY ONE DECIMAL
+          if (input.includes(".") == false) {
+            input = input += ".";
+          }
+          break;
+        //DIVIDE
+        case "/":
+          setEquation(input, event.key);
+          input = "";
+          break;
+        //MINUS
+        case "-":
+          setEquation(input, event.key);
+          input = "";
+          break;
+        //MULTIPLY
+        case "*":
+          setEquation(input, event.key);
+          input = "";
+          break;
+        //ADDITION
+        case "+":
+          setEquation(input, event.key);
+          input = "";
+          break;
       }
-      //IF % BUTTON IS SELECTED
-      if (elemId == "%") {
-        calcPercentage(temp, b);
-      }
-      //IF = BUTTON IS PUSHED
-      if (elemId == "Enter") {
+      //EQUALS
+      if (event.key == "Enter" || event.key == "=") {
         b = input;
-        doTheMath(mathOperator, a, b);
+        doTheMath(operator, a, b);
       }
-      inputDisplay(elemId);
-
-      /*
-      if (a == undefined) {
-        a = input;
-        console.log("A: " + a);
-      }
-      inputDisplay(elemId);
-      operatorCheck(elemId);
-
-*/
     }
   });
 
@@ -155,6 +143,9 @@ const calculator = () => {
   /*----------------------*/
   /* INTERIOR FUNCTIONS   */
   /*----------------------*/
+  /*-------------------------------------*/
+  /* INPUT DISPLAY (FOR BUTTON CLICKS)   */
+  /*-------------------------------------*/
   //CONVERT BUTTON CLICK TO INPUT
   let inputDisplay = (elemId) => {
     //IF PROPERTY EXISTS IN obj.buttons
@@ -170,19 +161,37 @@ const calculator = () => {
       }
     }
   };
+  /* END INPUT DISPLAY (FOR BUTTON CLICKS) --*/
 
-  //NUMBER CHECK
+  /*----------------*/
+  /* NUMBER CHECK   */
+  /*----------------*/
   let numRange = (x, min, max) => {
     return (x - min) * (x - max) <= 0;
   };
+  /* END NUMBER CHECK --*/
 
-  //OPERATOR CHECK
+  /*----------------*/
+  /* SET EQUATION   */
+  /*----------------*/
+  let setEquation = (num, expr) => {
+    if (result !== undefined) {
+      a = result;
+      operator = expr;
+    } else {
+      a = num;
+      operator = expr;
+    }
+  };
+  /* END SET EQUATION --*/
+
+  /*------------------*/
+  /* OPERATOR CHECK   */
+  /*------------------*/
   let operatorCheck = (elemId) => {
-    //ITERATE OVER OBJECT, LOCATE CALLED OPERATOR
+    //ITERATE OVER buttons OBJECT, LOCATE CALLED OPERATOR
     for (const property in button) {
-      console.log("182");
       if (property == elemId) {
-        console.log("184");
         //CLEAR
         if (button[elemId] == "C") {
           a = b = input = "";
@@ -191,13 +200,16 @@ const calculator = () => {
         }
         //DECIMAL
         else if (button[elemId] == ".") {
-          input = input += ".";
+          //ADD ONLY ONE DECIMAL
+          if (input.includes(".") == false) {
+            input = input += ".";
+          }
           buttonState(elemId);
         }
         //SQUARE ROOT
         else if (button[elemId] == "√") {
-          mathOperator = button[elemId];
-          doTheMath(mathOperator, a, b);
+          operator = button[elemId];
+          doTheMath(operator, a, b);
         }
         //ENTER || RETURN KEYPRESS
         else if (button[elemId] == "Enter") {
@@ -207,18 +219,12 @@ const calculator = () => {
           } else {
             a = input; //REASSIGN FIRST INPUT
             input = ""; //CLEAR INPUT
-
           }
-          console.log("AAA: " + a);
         }
 
         //ASSIGN MATH OPERATOR
         else {
-          console.log("INSIDE");
-          mathOperator = button[elemId];
-
-          console.log(mathOperator);
-
+          operator = button[elemId];
           if (result !== undefined) {
             a = result;
             input = "";
@@ -230,13 +236,19 @@ const calculator = () => {
       }
     }
   };
+  /* END OPERATOR CHECK --*/
 
-  //BUTTON INDICATOR
+  /*--------------------*/
+  /* BUTTON INDICATOR   */
+  /*--------------------*/
   let buttonState = (elem, state) => {
     console.log("BUTTONSTTE: " + elem);
   };
+  /* END BUTTON INDICATOR --*/
 
-  //CALCULATE PERCENTAGE
+  /*------------------------*/
+  /* CALCULATE PERCENTAGE   */
+  /*------------------------*/
   let calcPercentage = (a, b) => {
     str = (a / b) * 100;
     result = new Function("return " + str)();
@@ -244,11 +256,14 @@ const calculator = () => {
     a = b = temp = "";
     display.innerHTML = result;
   };
+  /* END CALCULATE PERCENTAGE --*/
 
-  //SOLVE MATH PROBLEM
+  /*------------------------*/
+  /* DO THE MATH FUNCTION   */
+  /*------------------------*/
   let doTheMath = (operator, numbers, moreNumbers) => {
     //SQUARE ROOT
-    if (mathOperator == "√") {
+    if (operator == "√") {
       if (result) {
         result = Math.sqrt(result);
       } else if (a || input) {
@@ -273,14 +288,16 @@ const calculator = () => {
 
     //EQUALS
     else {
-      str = a + mathOperator + b; //CONCATENATE THE STRING
-      console.log("231: str = " + str);
+      str = a + operator + b; //CONCATENATE THE STRING
       result = new Function("return " + str)();
     }
     display.innerHTML = result; //DISPLAY THE RESULT
   };
+  /* END DO THE MATH FUNCTION --*/
 
-  //RESIZE FONT TO FIT DISPLAY
+  /*------------------------------*/
+  /* RESIZE FONT TO FIT DISPLAY   */
+  /*------------------------------*/
   let resizeDisplay = () => {
     if (display.offsetWidth >= frame) {
       let fontSize = parseInt(display.style.fontSize); //DELETE 'px'
@@ -292,6 +309,7 @@ const calculator = () => {
       display.style.fontSize = defaultFontSz;
     }
   };
+  /* END RESIZE FONT TO FIT DISPLAY --*/
   /* END INTERIOR FUNCTIONS --*/
 };
 
@@ -344,5 +362,27 @@ window.onload = () => {
     },
   };
   */
+
+/*
+    //IF AN OPERATOR IS PRESSED
+    else {
+      //ITERATE THRU buttons OBJECT
+      Object.keys(button).forEach(function (key) {
+        if (button[key] == event.key) {
+          elemId = button[key];
+        }
+      });
+*/
+
+/*
+    //KEYBOARD INPUT
+    Enter: "Enter",
+    ".": ".",
+    "/": "/",
+    "-": "-",
+    "=": "=",
+    "*": "*",
+    "%": "%",
+*/
 
 /* END LEFTOVER CODE --*/
