@@ -1,7 +1,7 @@
-/* Last updated: 5/25/2023 --*/
+/* Last updated: 5/31/2023 --*/
 
 /* ROAD MAP
-  1. KEYBOARD EVENTS: CLEAR, PERCENTAGE, SQUARE ROOT
+  1. BUTTON EVENTS: FIX PERCENTAGE EQUATION
   2. HIGHLIGHT OPERATOR KEY ON PRESS/RELEASE (buttonState(), LINE ~174)
   3. SHOW RESULT, RELEASE OPERATOR HIGHLIGHT ON EQUAL (IF VALID)
   4. TEST TEST TEST
@@ -38,7 +38,18 @@ const calculator = () => {
 
   const frame = document.getElementById("display-frame").offsetWidth - 30; //426px
   const display = document.getElementById("display");
-  const keyOperators = ["Enter", ".", "/", "-", "=", "*", "%", "+"];
+  const keyOperators = [
+    "Enter",
+    ".",
+    "/",
+    "-",
+    "=",
+    "*",
+    "%",
+    "+",
+    "c",
+    "Backspace",
+  ];
 
   let a; //HOLD FOR FIRST NUMBER EXPRESSION
   let b; //HOLD FOR SECOND NUMBER EXPRESSION
@@ -126,6 +137,18 @@ const calculator = () => {
           setEquation(input, event.key);
           input = "";
           break;
+        //PERCENTAGE
+        case "%":
+          calcPercentage(a, b);
+          break;
+        //CLEAR
+        case "c":
+          clearButton();
+          break;
+        //DELETE
+        case "Backspace":
+          backspace();
+          break;
       }
       //EQUALS
       if (event.key == "Enter" || event.key == "=") {
@@ -194,9 +217,7 @@ const calculator = () => {
       if (property == elemId) {
         //CLEAR
         if (button[elemId] == "C") {
-          a = b = input = "";
-          result = undefined;
-          display.innerHTML = defaultHTML;
+          clearButton();
         }
         //DECIMAL
         else if (button[elemId] == ".") {
@@ -246,6 +267,33 @@ const calculator = () => {
   };
   /* END BUTTON INDICATOR --*/
 
+  /*----------------*/
+  /* CLEAR BUTTON   */
+  /*----------------*/
+  let clearButton = () => {
+    a = b = input = "";
+    result = undefined;
+    display.innerHTML = defaultHTML;
+  };
+  /* END CLEAR BUTTON --*/
+
+  /*-------------*/
+  /* BACKSPACE   */
+  /*-------------*/
+  let backspace = () => {
+    //BEFORE FIRST EQUATION
+    if (result == undefined) {
+      input = input.slice(0, -1);
+      display.innerHTML = input;
+    }
+    //AFTER FIRST EQUATION
+    if (result && input) {
+      input = input.slice(0, -1);
+      display.innerHTML = input;
+    }
+  };
+  /* END BACKSPACE --*/
+
   /*------------------------*/
   /* CALCULATE PERCENTAGE   */
   /*------------------------*/
@@ -292,6 +340,7 @@ const calculator = () => {
       result = new Function("return " + str)();
     }
     display.innerHTML = result; //DISPLAY THE RESULT
+    a = b = input = "";
   };
   /* END DO THE MATH FUNCTION --*/
 
