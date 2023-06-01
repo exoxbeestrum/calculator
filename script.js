@@ -1,12 +1,4 @@
-/* Last updated: 5/31/2023 --*/
-
-/* ROAD MAP
-  1. BUTTON EVENTS: FIX PERCENTAGE EQUATION
-  2. HIGHLIGHT OPERATOR KEY ON PRESS/RELEASE (buttonState(), LINE ~174)
-  3. SHOW RESULT, RELEASE OPERATOR HIGHLIGHT ON EQUAL (IF VALID)
-  4. TEST TEST TEST
-  5. STYLE CALCULATOR
-*/
+/* Last updated: 6/1/2023 --*/
 
 /*---------------------*/
 /* DECLARE VARIABLES   */
@@ -86,7 +78,7 @@ const calculator = () => {
     }
     //IF % BUTTON IS SELECTED
     if (elemId == "percent") {
-      calcPercentage(temp, b);
+      calcPercentage(a, b);
     }
     //IF = BUTTON IS PUSHED
     if (elemId == "equal") {
@@ -96,7 +88,7 @@ const calculator = () => {
     inputDisplay(elemId);
     resizeDisplay();
   });
-  /* END MOUSE EVENTS  */
+  /* END MOUSE EVENTS --*/
 
   /*-------------------*/
   /* KEYBOARD EVENTS   */
@@ -225,7 +217,6 @@ const calculator = () => {
           if (input.includes(".") == false) {
             input = input += ".";
           }
-          buttonState(elemId);
         }
         //SQUARE ROOT
         else if (button[elemId] == "√") {
@@ -259,14 +250,6 @@ const calculator = () => {
   };
   /* END OPERATOR CHECK --*/
 
-  /*--------------------*/
-  /* BUTTON INDICATOR   */
-  /*--------------------*/
-  let buttonState = (elem, state) => {
-    console.log("BUTTONSTTE: " + elem);
-  };
-  /* END BUTTON INDICATOR --*/
-
   /*----------------*/
   /* CLEAR BUTTON   */
   /*----------------*/
@@ -294,15 +277,25 @@ const calculator = () => {
   };
   /* END BACKSPACE --*/
 
-  /*------------------------*/
-  /* CALCULATE PERCENTAGE   */
-  /*------------------------*/
+  /*-------------------------------------*/
+  /* CALCULATE PERCENTAGE (VERY BUGGY)   */
+  /*-------------------------------------*/
   let calcPercentage = (a, b) => {
     str = (a / b) * 100;
     result = new Function("return " + str)();
-    result = result.toFixed(2) + "%";
-    a = b = temp = "";
+
+    if ((a = undefined || b == undefined)) {
+      result = "ERROR";
+    } else if ((result = "NaN")) {
+      result = "ERROR";
+    } else if (result == Infinity) {
+      result = "ERROR";
+    } else {
+      result = result.toFixed(2) + "%";
+    }
+    a = b = input = str = temp = "";
     display.innerHTML = result;
+    setTimeout(clearButton, 1000);
   };
   /* END CALCULATE PERCENTAGE --*/
 
@@ -310,37 +303,42 @@ const calculator = () => {
   /* DO THE MATH FUNCTION   */
   /*------------------------*/
   let doTheMath = (operator, numbers, moreNumbers) => {
-    //SQUARE ROOT
-    if (operator == "√") {
-      if (result) {
-        result = Math.sqrt(result);
-      } else if (a || input) {
-        if (a) {
-          result = Math.sqrt(a).toFixed(5);
+    //IF REQUISITE VARIABLES NOT PASSED...
+    if (!operator || !numbers || !moreNumbers) {
+      //...DO NOTHING
+    } else {
+      //SQUARE ROOT
+      if (operator == "√") {
+        if (result) {
+          result = Math.sqrt(result);
+        } else if (a || input) {
+          if (a) {
+            result = Math.sqrt(a).toFixed(5);
+          } else {
+            result = Math.sqrt(input);
+          }
         } else {
-          result = Math.sqrt(input);
+          result = "error";
+          return;
         }
-      } else {
-        result = "error";
-        return;
-      }
 
-      //REDUCE THE RESULT
-      let n = result.toString().length;
-      if (n >= 6) {
-        result = result.toFixed(5);
+        //REDUCE THE RESULT
+        let n = result.toString().length;
+        if (n >= 6) {
+          result = result.toFixed(5);
+        }
+        a = b = input = "";
       }
+      //END SQUARE ROOT
+
+      //EQUALS
+      else {
+        str = a + operator + b; //CONCATENATE THE STRING
+        result = new Function("return " + str)();
+      }
+      display.innerHTML = result; //DISPLAY THE RESULT
       a = b = input = "";
     }
-    //END SQUARE ROOT
-
-    //EQUALS
-    else {
-      str = a + operator + b; //CONCATENATE THE STRING
-      result = new Function("return " + str)();
-    }
-    display.innerHTML = result; //DISPLAY THE RESULT
-    a = b = input = "";
   };
   /* END DO THE MATH FUNCTION --*/
 
@@ -368,70 +366,3 @@ const calculator = () => {
 window.onload = () => {
   calculator();
 };
-
-/*-----------------*/
-/* LEFTOVER CODE   */
-/*-----------------*
-    //ITERATE OVER obj.button, DISPLAY PROPERTIES
-    for (const property in button) {
-      console.log(`${property}: ${button[property]}`);
-    }
-
-  /*
-  const operator = {
-    "+": function (a, b) {
-      return a + b;
-    },
-    C: function (a, b) {
-      a == "";
-      b == "";
-      return a, b;
-    },
-    "/": function (a, b) {
-      return a / b;
-    },
-    "-": function (a, b) {
-      return a - b;
-    },
-    "*": function (a, b) {
-      return a * b;
-    },
-    "%": function (a, b) {
-      return (a / b) * 100;
-    },
-    "√": function (a) {
-      let num = a;
-      num = Math.sqrt(num);
-      if (Number.isInteger(num) == true) {
-        return num;
-      }
-      if (Number.isInteger(num) == false) {
-        return num.toFixed(2);
-      }
-    },
-  };
-  */
-
-/*
-    //IF AN OPERATOR IS PRESSED
-    else {
-      //ITERATE THRU buttons OBJECT
-      Object.keys(button).forEach(function (key) {
-        if (button[key] == event.key) {
-          elemId = button[key];
-        }
-      });
-*/
-
-/*
-    //KEYBOARD INPUT
-    Enter: "Enter",
-    ".": ".",
-    "/": "/",
-    "-": "-",
-    "=": "=",
-    "*": "*",
-    "%": "%",
-*/
-
-/* END LEFTOVER CODE --*/
